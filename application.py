@@ -24,6 +24,13 @@ def pagenotfound():
 @app.route("/admin")
 def admin():
     return redirect(url_for("pagenotfound"))
+    
+@upload.route("/create",methods=["POST"])
+def display_chart():
+    hType = request.form["hType"]
+    # forward_message = algorithm.init(hType)
+    # target = user_input
+    return render_template('household_create.html', forward_message=forward_message,target=target);
 
 if __name__ == "__main__":
     app.run()
