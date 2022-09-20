@@ -1,0 +1,23 @@
+<html>  
+<head>  
+    <title>Create Household</title>  
+</head>  
+<body>
+	<h1>Create Household</h1>
+	<p>Selecting a Housing Type and Click Submit</p>
+	
+	<form action = "/create" method = "post">
+		<label for="hType">Housing Type:</label>
+		<select name="hType" id="hType">
+		  <option value="landed">Landed</option>
+		  <option value="condominium">Condominium</option>
+		  <option value="hdb">HDB</option>
+		</select> 
+		<button name="submitBtn" value="Submit">Submit</button> 
+    </form>  
+	
+	<h2>User : {{ target }}</h2>
+	{{ forward_message }}
+	{{	pie_chart	}}
+</body>  
+</html>  
