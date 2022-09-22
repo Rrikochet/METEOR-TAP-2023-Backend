@@ -1,0 +1,19 @@
+<head>  
+    <title>Search Household</title>  
+</head>  
+<body>
+	<h1>Search Household</h1>
+	<p>Click Submit to Search Household</p>
+	
+	<form action = "/search" method = "post">
+		<label for="household_id">Household ID:</label>
+		<input type="text" name="household_id" id="household_id">
+		<br>
+		<button name="submitBtn" value="Submit">Submit</button> 
+    </form>  
+	
+
+	<h3>{{ searchMessage }}</h3>
+
+</body>  
+</html>  

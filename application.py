@@ -181,15 +181,26 @@ def household_list_all():
     if request.method == "GET":
         return render_template('household_list_all.html');
     # If Method is POST
-    elif request.method == "POST":
-    
-        # listAllMessage = ''
-        # for i in db.session.query(Household).all():
-            # listAllMessage = listAllMessage + '\n' + str(i)
-            
+    elif request.method == "POST": 
         listAllMessage = db.session.query(Household).all()
-        
         return render_template('household_list_all.html', listAllMessage= listAllMessage);
+    # If Method is anything else
+    else: 
+        return redirect(url_for("pagenotfound"));
+        
+        
+        
+@app.route("/search",methods=["GET", "POST"])
+def household_search():
+    db.create_all()
+    # If Method is GET
+    if request.method == "GET":
+        return render_template('household_search.html');
+    # If Method is POST
+    elif request.method == "POST":
+        h = request.form["household_id"]
+        searchMessage = db.session.query(Household).get(h)
+        return render_template('household_search.html', searchMessage= searchMessage);
     # If Method is anything else
     else: 
         return redirect(url_for("pagenotfound"));
