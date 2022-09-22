@@ -34,7 +34,7 @@ class Household(db.Model):
     
     # "To String" Method
     def __repr__(self):
-        return f"Household('{self.id}', '{self.hType}')"
+        return f"Household('{self.id}', '{self.hType}', '{self.members}')"
         
 class Member(db.Model):
 
@@ -123,14 +123,33 @@ def household_add_member():
             
             # UNUSED to see all existing households
             # existingHousehold = [id for id, in db.session.query(Household.id)]
+            # Do logic to check for all inputs that cannot be empty
+            
+            
+            # Spouse Checks
             
             # Check if member is single, but inputs a spouse, immediately return message
             if mS == "single" and s != "":
                 return render_template('household_add_member.html', addMemberMessage='You cannot be Single and have a Spouse');
             
-            # Check if spouse already exists on some other member
-            if db.session.query(Member.id).filter_by(spouse=s).limit(1).scalar() is not None:
-                return render_template('household_add_member.html', addMemberMessage='Your Spouse is already taken');
+            # Check if member is married, must have spouse value
+            elif mS == "married" and s == "":
+                return render_template('household_add_member.html', addMemberMessage='You cannot be Married and have no Spouse');
+            
+            # Check if member is married and have spouse values
+            elif mS == "married" and s != "":
+            
+                # Check if spouse has spouse value of new member id
+                if db.session.query(Member.spouse).filter_by(id=s).limit(1).scalar() is not db.session.query(Member.id).order_by(Member.id.desc()).limit(1).scalar()+1:
+                
+                    # Check if spouse already exists on some other member
+                    if db.session.query(Member.id).filter_by(spouse=s).limit(1).scalar() is not None:
+                        return render_template('household_add_member.html', addMemberMessage='Your Spouse is taken by another person');
+                
+                    # Check if spouse already has spouse
+                    if db.session.query(Member.spouse).filter_by(id=s).limit(1).scalar() is not None:
+                        return render_template('household_add_member.html', addMemberMessage='Your Spouse has taken another person');
+            
             
             # If Member inputs a household value, use it, otherwise use latest household
             if h == "":
@@ -163,10 +182,12 @@ def household_list_all():
         return render_template('household_list_all.html');
     # If Method is POST
     elif request.method == "POST":
-        listAllMessage = ''
-        for i in db.session.query(Household).all():
-            listAllMessage = listAllMessage + '\n' + str(i)
-        #listAllMessage = db.session.query(Household).all()#.order_by(Household.id.desc())
+    
+        # listAllMessage = ''
+        # for i in db.session.query(Household).all():
+            # listAllMessage = listAllMessage + '\n' + str(i)
+            
+        listAllMessage = db.session.query(Household).all()
         
         return render_template('household_list_all.html', listAllMessage= listAllMessage);
     # If Method is anything else

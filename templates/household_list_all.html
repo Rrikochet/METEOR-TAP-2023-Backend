@@ -9,7 +9,14 @@
 		<button name="submitBtn" value="Submit">Submit</button> 
     </form>  
 	
-	<h3>{{ listAllMessage }}</h3>
+	<ul>
+		{% for households in listAllMessage %}
+		<li>
+			{{ households }}
+		</li>
+		{% endfor %}
+	</ul>
+
 
 </body>  
 </html>  
