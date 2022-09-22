@@ -9,7 +9,7 @@
 	<form action = "/addmember" method = "post">
 	
 		<label for="name">Name:</label>
-		<input type="text" name="name">
+		<input type="text" name="name" id="name">
 		<br>
 		<label for="name">Gender:</label>
 		<select name="gender" id="gender">
@@ -34,15 +34,18 @@
 		</select> 
 		<br>
 		<label for="annualIncome">Annual Income:</label>
-		<input type="text" name="annualIncome">
+		<input type="text" name="annualIncome" id="annualIncome">
 		<br>
-		<label for="dob">DOB(dd/mm/yyyy):</label>
-		<input type="text" name="dob">
+		<label for="dob">DOB:</label>
+		<input type="date" name="dob", id="dob">
+		<br>
+		<label for="household_id">Household ID:</label>
+		<input type="text" name="household_id", id="household_id">
 		<br>
 		<button name="submitBtn" value="Submit">Submit</button> 
     </form>  
 	
-	<h3>{{ createMessage }}</h3>
+	<h3>{{ addMemberMessage }}</h3>
 
 </body>  
 </html>  
