@@ -150,10 +150,28 @@ def household_add_member():
             return render_template('household_add_member.html', addMemberMessage=addMemberMessage);  
         except Exception as e:
             return render_template('household_add_member.html', addMemberMessage=e);
-
+            
     # If Method is anything else
     else: 
         return redirect(url_for("pagenotfound"))
+
+@app.route("/listall",methods=["GET", "POST"])
+def household_list_all():
+    db.create_all()
+    # If Method is GET
+    if request.method == "GET":
+        return render_template('household_list_all.html');
+    # If Method is POST
+    elif request.method == "POST":
+        listAllMessage = ''
+        for i in db.session.query(Household).all():
+            listAllMessage = listAllMessage + '\n' + str(i)
+        #listAllMessage = db.session.query(Household).all()#.order_by(Household.id.desc())
+        
+        return render_template('household_list_all.html', listAllMessage= listAllMessage);
+    # If Method is anything else
+    else: 
+        return redirect(url_for("pagenotfound"));
 
 if __name__ == "__main__":
     app.run()
