@@ -44,7 +44,7 @@ class Member(db.Model):
     name = db.Column(db.String, unique=False, nullable=False)
     gender = db.Column(db.String, unique=False, nullable=False)
     maritalStatus = db.Column(db.String, unique=False, nullable=False)
-    spouse = db.Column(db.Integer, unique=True, nullable=True)
+    spouse = db.Column(db.Integer, unique=False, nullable=True)
     occupationType = db.Column(db.String, unique=False, nullable=False)
     annualIncome = db.Column(db.Float, unique=False, nullable=False)
     dob = db.Column(db.Date, unique=False, nullable=False)
@@ -119,36 +119,58 @@ def household_add_member():
             aI = request.form["annualIncome"]
             d = request.form["dob"]
             h = request.form["household_id"]
+            addMemberMessage = 'Something went wrong.'
+            spouseCheck = False
             
             # UNUSED to see all existing households
             # existingHousehold = [id for id, in db.session.query(Household.id)]
             # Do logic to check for all inputs that cannot be empty
             
-            
-            # Spouse Checks
-            
-            # Check if member is single, but inputs a spouse, immediately return message
-            if mS == "single" and s != "":
-                return render_template('household_add_member.html', addMemberMessage='You cannot be Single and have a Spouse');
-            
-            # Check if member is married, must have spouse value
-            elif mS == "married" and s == "":
-                return render_template('household_add_member.html', addMemberMessage='You cannot be Married and have no Spouse');
-            
-            # Check if member is married and have spouse values
-            elif mS == "married" and s != "":
-            
-                # Check if spouse has spouse value of new member id
-                if db.session.query(Member.spouse).filter_by(id=s).limit(1).scalar() is not db.session.query(Member.id).order_by(Member.id.desc()).limit(1).scalar()+1:
+            # Spouse Check Function
+            def spouse_check(mS, s, spouseCheck, addMemberMessage):
+                # Spouse Checks
+                # Check if member is single, but inputs a spouse, immediately return message
+                if mS == "single" and s != "":
+                    addMemberMessage ='You cannot be Single and have a Spouse'
+                    return spouseCheck, addMemberMessage
                 
-                    # Check if spouse already exists on some other member
-                    if db.session.query(Member.id).filter_by(spouse=s).limit(1).scalar() is not None:
-                        return render_template('household_add_member.html', addMemberMessage='Your Spouse is taken by another person');
+                # Check if member is married, must have spouse value
+                elif mS == "married" and s == "":
+                    addMemberMessage='You cannot be Married and have no Spouse'
+                    return spouseCheck, addMemberMessage
                 
-                    # Check if spouse already has spouse
-                    if db.session.query(Member.spouse).filter_by(id=s).limit(1).scalar() is not None:
-                        return render_template('household_add_member.html', addMemberMessage='Your Spouse has taken another person');
-            
+                # Check if member is married and have spouse values
+                elif mS == "married" and s != "":
+                
+                    # Check if spouse has spouse value of new member id
+                    if db.session.query(Member.spouse).filter_by(id=s).limit(1).scalar() is not db.session.query(Member.id).order_by(Member.id.desc()).limit(1).scalar()+1:
+                    
+                        # Check if spouse already exists on some other member
+                        if db.session.query(Member.id).filter_by(spouse=s).limit(1).scalar() is not None:
+                            addMemberMessage='Your Spouse is taken by another person'
+                            return spouseCheck, addMemberMessage
+                    
+                        # Check if spouse already has spouse
+                        elif db.session.query(Member.spouse).filter_by(id=s).limit(1).scalar() is not None:
+                            addMemberMessage='Your Spouse has taken another person'
+                            return spouseCheck, addMemberMessage
+                            
+                        else: 
+                            spouseCheck = True
+                            return spouseCheck, addMemberMessage
+                    else: 
+                        spouseCheck = True
+                        return spouseCheck, addMemberMessage
+                else:
+                    spouseCheck = True
+                    return spouseCheck, addMemberMessage
+                    
+
+            # Print Check if error occured
+            spouseCheck, addMemberMessage = spouse_check(mS, s, spouseCheck, addMemberMessage)
+            if spouseCheck != True:
+                return render_template('household_add_member.html', addMemberMessage=addMemberMessage);
+
             
             # If Member inputs a household value, use it, otherwise use latest household
             if h == "":
