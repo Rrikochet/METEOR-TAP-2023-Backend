@@ -70,8 +70,7 @@ class Member(db.Model):
 # Routes
 @app.route("/")
 def home():
-    #return "<h1>Hello</h1>"
-    return render_template("index.html")
+    return render_template("household_create.html")
 
 @app.route('/<path:path>')
 def static_file(path):
