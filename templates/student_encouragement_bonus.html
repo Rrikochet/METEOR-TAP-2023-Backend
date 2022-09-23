@@ -1,22 +1,17 @@
 <head>  
-    <title>List All Household</title>  
+    <title>List Qualifying Household</title>  
 </head>  
 <body>
 	<form>
 		<button formaction = "/create" >Create</button> 
 		<button formaction = "/search" >Search</button> 
 		<button formaction = "/addmember" >Add Member</button>
-		<button formaction = "/listqualifying" >List Qualifying</button>		
+		<button formaction = "/listall" >List All</button>
+		<button formaction = "/listqualifying" >List Qualifying</button>
     </form>   
 
+	<h1>List Qualifying Household for SEB</h1>
 
-	<h1>List All Household</h1>
-	<p>Click Submit to List All Households</p>
-	
-	<form action = "/listall" method = "post">
-		<button name="submitBtn" value="Submit">Submit</button> 
-    </form>  
-	
 	<ul>
 		{% for households in listAllMessage %}
 		<li>
@@ -24,7 +19,6 @@
 		</li>
 		{% endfor %}
 	</ul>
-
 
 </body>  
 </html>  

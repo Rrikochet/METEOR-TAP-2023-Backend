@@ -21,11 +21,12 @@ db.create_all()
 # Classes
 class Household(db.Model):
 
+    # Table Name
     __tablename__='households'
     
+    # Member Values
     id = db.Column(db.Integer, primary_key=True)
-    hType = db.Column(db.String, unique=False, nullable=False)
-    
+    hType = db.Column(db.String, nullable=False)
     members = db.relationship('Member', backref='households', lazy=True)
     
     # Constructor
@@ -35,20 +36,22 @@ class Household(db.Model):
     # "To String" Method
     def __repr__(self):
         return f"Household('{self.id}', '{self.hType}', '{self.members}')"
-        
-class Member(db.Model):
 
+# Class Member
+class Member(db.Model):
+    
+    # Table Name
     __tablename__='members'
     
+    # Member Values
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, unique=False, nullable=False)
-    gender = db.Column(db.String, unique=False, nullable=False)
-    maritalStatus = db.Column(db.String, unique=False, nullable=False)
-    spouse = db.Column(db.Integer, unique=False, nullable=True)
-    occupationType = db.Column(db.String, unique=False, nullable=False)
-    annualIncome = db.Column(db.Float, unique=False, nullable=False)
-    dob = db.Column(db.Date, unique=False, nullable=False)
-    
+    name = db.Column(db.String, nullable=False)
+    gender = db.Column(db.String, nullable=False)
+    maritalStatus = db.Column(db.String, nullable=False)
+    spouse = db.Column(db.Integer, nullable=True)
+    occupationType = db.Column(db.String, nullable=False)
+    annualIncome = db.Column(db.Float, nullable=False)
+    dob = db.Column(db.Date, nullable=False)
     household_id = db.Column(db.Integer, db.ForeignKey('households.id'), nullable=False)
     
     # Constructor
@@ -84,7 +87,7 @@ def pagenotfound():
 def admin():
     return redirect(url_for("pagenotfound"))
     
-@app.route("/create",methods=["GET", "POST"])
+@app.route("/create")
 def household_create():
     # If Method is GET
     if request.method == "GET":
@@ -102,15 +105,12 @@ def household_create():
     else: 
         return redirect(url_for("pagenotfound"))
    
-@app.route("/addmember",methods=["GET", "POST"])
+@app.route("/addmember")
 def household_add_member():
-    # If Method is GET
-    if request.method == "GET":
-        return render_template('household_add_member.html');
+    db.create_all()
     # If Method is POST
-    elif request.method == "POST":
+    if request.method == "POST":
         try:
-            db.create_all()
             n = request.form["name"]
             g = request.form["gender"]
             mS = request.form["maritalStatus"]
@@ -193,38 +193,55 @@ def household_add_member():
             
     # If Method is anything else
     else: 
-        return redirect(url_for("pagenotfound"))
+        return render_template('household_add_member.html');
 
-@app.route("/listall",methods=["GET", "POST"])
+@app.route("/listall")
 def household_list_all():
     db.create_all()
-    # If Method is GET
-    if request.method == "GET":
-        return render_template('household_list_all.html');
     # If Method is POST
-    elif request.method == "POST": 
+    if request.method == "POST": 
         listAllMessage = db.session.query(Household).all()
         return render_template('household_list_all.html', listAllMessage= listAllMessage);
     # If Method is anything else
     else: 
-        return redirect(url_for("pagenotfound"));
+        return render_template('household_list_all.html');
         
-        
-        
-@app.route("/search",methods=["GET", "POST"])
+@app.route("/search")
 def household_search():
     db.create_all()
-    # If Method is GET
-    if request.method == "GET":
-        return render_template('household_search.html');
     # If Method is POST
-    elif request.method == "POST":
+    if request.method == "POST":
         h = request.form["household_id"]
         searchMessage = db.session.query(Household).get(h)
         return render_template('household_search.html', searchMessage= searchMessage);
     # If Method is anything else
     else: 
-        return redirect(url_for("pagenotfound"));
+        return render_template('household_search.html');
+
+@app.route("/listqualifying")
+def household_list_qualifying():
+    db.create_all()
+    # If Method is POST
+    if request.method == "POST":
+        h = request.form["household_list_qualifying"]
+        listQualifyingMessage = db.session.query(Household).get(h)
+        return render_template('household_list_qualifying.html', listQualifyingMessage= listQualifyingMessage);
+    # If Method is anything else
+    else: 
+        return render_template('household_list_qualifying.html');
+
+
+@app.route("/listqualifying/SEB")
+def student_encouragement_bonus():
+    db.create_all()
+    # If Method is POST
+    if request.method == "POST":
+        return render_template('student_encouragement_bonus.html');
+    # If Method is anything else
+    else: 
+        return render_template('student_encouragement_bonus.html');
+
+
 
 if __name__ == "__main__":
     app.run()
