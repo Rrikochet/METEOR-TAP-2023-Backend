@@ -1,26 +1,24 @@
 <head>  
-    <title>List All Household</title>  
+    <title>List Qualifying Household</title>  
 </head>  
 <body>
 	<form>
 		<button formaction = "/create" >Create</button> 
 		<button formaction = "/search" >Search</button> 
 		<button formaction = "/addmember" >Add Member</button>
-		<button formaction = "/listqualifying" >List Qualifying</button>		
+		<button formaction = "/listall" >List All</button>
+		<button formaction = "/listqualifying" >List Qualifying</button>
     </form>   
 
-
-	<h1>List All Household</h1>
- 
-	
+	<h1>List Qualifying Household & Members for MS</h1>
+	<h3>Household ID, Member ID</h3>
 	<ul>
-		{% for households in listAllMessage %}
+		{% for households in MSMessage %}
 		<li>
 			{{ households }}
 		</li>
 		{% endfor %}
 	</ul>
-
 
 </body>  
 </html>  

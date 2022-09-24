@@ -2,7 +2,7 @@
 from flask import Flask,redirect, url_for,render_template, url_for, flash, send_from_directory, request, session
 from datetime import timedelta
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import exc, extract, func
+from sqlalchemy import exc, extract, func, or_
 from datetime import datetime, date
 import secrets
 import string
@@ -198,13 +198,13 @@ def household_add_member():
 @app.route("/listall", methods=["GET", "POST"])
 def household_list_all():
     db.create_all()
-    # If Method is POST
-    if request.method == "POST": 
-        listAllMessage = db.session.query(Household).all()
-        return render_template('household_list_all.html', listAllMessage= listAllMessage);
-    # If Method is anything else
-    else: 
-        return render_template('household_list_all.html');
+    # # If Method is POST
+    # if request.method == "POST": 
+    listAllMessage = db.session.query(Household).all()
+    return render_template('household_list_all.html', listAllMessage= listAllMessage);
+    # # If Method is anything else
+    # else: 
+        # return render_template('household_list_all.html');
         
 @app.route("/search", methods=["GET", "POST"])
 def household_search():
@@ -260,7 +260,7 @@ def student_encouragement_bonus():
     total_income = []
     
     # Join Household and Member
-    total_income = db.session.query(Household).join(Member, Household.id == Member.household_id).order_by(Member.household_id.asc())
+    total_income = db.session.query(Household).join(Member, Household.id == Member.household_id)
     
     # For each Household
     for row in total_income:
@@ -270,7 +270,7 @@ def student_encouragement_bonus():
             members_income = members_income + subrow.annualIncome
         
         # If member is in a household with > 200000, create a list of members
-        if members_income > 200000.0:
+        if members_income < 200000.0:
             for subrow in row.members:
                 members_row_id.append(subrow.id)
             
@@ -284,11 +284,49 @@ def student_encouragement_bonus():
         
         # Reset the income for each Household
         members_income = 0
-            
-    SEBMessage = db.session.query(Member.household_id, Member.id).filter(extract('year',Member.dob) <= extract('year',datetime.today())-16, Member.id.in_((members_row_id))).all()
+    
+    # TO DO - Currently Checks Year only. Would like to check Full Date.
+    SEBMessage = db.session.query(Member.household_id, Member.id).filter(extract('year',Member.dob) > extract('year',datetime.today())-16, Member.id.in_((members_row_id))).order_by(Member.household_id.asc()).all()
     
     #SEBMessage = household_income
     return render_template('student_encouragement_bonus.html', SEBMessage=SEBMessage);
+    
+    
+@app.route("/listqualifying/MS", methods=["GET", "POST"])
+def multigeneration_scheme():
+    db.create_all()
+
+    household_row_id = []
+    household_income = []
+    members_row_id = []
+    members_income = 0
+    total_income = []
+    
+    # Join Household and Member
+    total_income = db.session.query(Household).join(Member, Household.id == Member.household_id)
+    
+    # For each Household
+    for row in total_income:
+        # For each Member
+        for subrow in row.members:
+            # Add their incomes together
+            members_income = members_income + subrow.annualIncome
+        
+        # If member is in a household with > 200000, create a list of members
+        if members_income < 100000.0:
+            for subrow in row.members:
+                members_row_id.append(subrow.id)
+
+        # Reset the income for each Household
+        members_income = 0
+            
+    MSMessage = db.session.query(Member.household_id, Member.id).filter(or_(extract('year',Member.dob) > extract('year',datetime.today())-18, extract('year',Member.dob) < extract('year',datetime.today())-55), Member.id.in_((members_row_id))).order_by(Member.household_id.asc()).all()
+    
+    #MSMessage = household_income
+    return render_template('multigeneration_scheme.html', MSMessage=MSMessage);
+    
+    
+    
 
 if __name__ == "__main__":
     app.run()
