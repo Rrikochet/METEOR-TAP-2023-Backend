@@ -11,11 +11,16 @@
     </form>   
 
 	<h1>List Qualifying Household & Members for MS</h1>
-	<h3>Household ID, Member ID</h3>
+	<h3>Displayed in the format: Household ID, Member ID</h3>
 	<ul>
-		{% for households in MSMessage %}
+		{% for members in MSMessage %}
+			
 		<li>
-			{{ households }}
+			<label>Household ID</label>
+			{{ members.household_id }}
+			<label for="EB">Member ID</label>
+			{{ members.id }}
+			<br>
 		</li>
 		{% endfor %}
 	</ul>
