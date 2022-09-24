@@ -251,6 +251,8 @@ def student_encouragement_bonus():
     qualified_members = db.session.query(Member.household_id, Member.id).filter(and_(age_calculator(Member) > current_calculator(16, 0), Member.id.in_(filtered_members), Member.occupationType == 'student')).order_by(Member.household_id.asc()).all()
 
     SEBMessage = qualified_members
+    print("\nBelow are SEB Qualified Members\n")
+    print(str(SEBMessage), end='\n\n')
     return render_template('student_encouragement_bonus.html', SEBMessage=SEBMessage);
      
 @app.route("/listqualifying/MS", methods=["GET", "POST"])
@@ -291,6 +293,8 @@ def multigeneration_scheme():
     qualified_households = db.session.query(Member.household_id, Member.id).filter(Member.household_id.in_(qualified_members)).order_by(Member.household_id.asc()).all()
 
     MSMessage = qualified_households
+    print("\nBelow are MS Qualified Members\n")
+    print(str(MSMessage), end='\n\n')
     return render_template('multigeneration_scheme.html', MSMessage=MSMessage);
     
 @app.route("/listqualifying/EB", methods=["GET", "POST"])
@@ -315,6 +319,8 @@ def elder_bonus():
     qualified_members = db.session.query(Member).filter(and_(age_calculator(Member) < current_calculator(55, 0)), Member.household_id.in_(filtered_households)).order_by(Member.household_id.asc()).all()
 
     EBMessage = qualified_members
+    print("\nBelow are EB Qualified Members\n")
+    print(str(EBMessage), end='\n\n')
     return render_template('elder_bonus.html', EBMessage=EBMessage);
     
 @app.route("/listqualifying/BSG", methods=["GET", "POST"])
@@ -328,6 +334,8 @@ def baby_sunshine_grant():
     qualified_members = db.session.query(Member).filter(age_calculator(Member) > current_calculator(0, 8)).order_by(Member.household_id.asc()).all()
 
     BSGMessage = qualified_members
+    print("\nBelow are BSG Qualified Members\n")
+    print(str(BSGMessage), end='\n\n')
     return render_template('baby_sunshine_grant.html', BSGMessage=BSGMessage);
 
 @app.route("/listqualifying/YGG", methods=["GET", "POST"])
@@ -383,6 +391,8 @@ def yolo_gst_grant():
     qualified_members = db.session.query(Member).filter(Member.household_id.in_(qualified_households)).order_by(Member.household_id.asc()).all()
 
     YGGMessage = qualified_members
+    print("\nBelow are YGG Qualified Members\n")
+    print(str(YGGMessage), end='\n\n')
     return render_template('yolo_gst_grant.html', YGGMessage=YGGMessage);
 
 # Age Calculator used by listqualifying pages
