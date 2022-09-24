@@ -10,15 +10,17 @@
 		<button formaction = "/listqualifying" >List Qualifying</button>
     </form>   
 
-	<h1>List Qualifying Household & Members for SEB</h1>
+	<h1>List Qualifying Household & Members for EB</h1>
 	<h3>Displayed in the format: Household ID, Member ID</h3>
 	<ul>
-		{% for members in SEBMessage %}
+		{% for members in EBMessage %}
+			
 		<li>
 			<label>Household ID</label>
 			{{ members.household_id }}
-			<label for="SEB">Member ID</label>
+			<label for="EB">Member ID</label>
 			{{ members.id }}
+			<br>
 		</li>
 		{% endfor %}
 	</ul>

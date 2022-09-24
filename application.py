@@ -26,16 +26,16 @@ class Household(db.Model):
     
     # Member Values
     id = db.Column(db.Integer, primary_key=True)
-    hType = db.Column(db.String, nullable=False)
+    housingType = db.Column(db.String, nullable=False)
     members = db.relationship('Member', backref='households', lazy=True)
     
     # Constructor
-    def __init__ (self, hType, notify=False):
-        self.hType = hType
+    def __init__ (self, housingType, notify=False):
+        self.housingType = housingType
     
     # "To String" Method
     def __repr__(self):
-        return f"Household('{self.id}', '{self.hType}', '{self.members}')"
+        return f"Household('{self.id}', '{self.housingType}', '{self.members}')"
 
 # Class Member
 class Member(db.Model):
@@ -95,8 +95,8 @@ def household_create():
     # If Method is POST
     elif request.method == "POST":
         db.create_all()
-        hT = request.form["hType"]
-        db.session.add(Household(hType=hT))
+        hT = request.form["housingType"]
+        db.session.add(Household(housingType=hT))
         db.session.commit()
         last = str(db.session.query(Household.id).order_by(Household.id.desc()).limit(1).scalar())
         createMessage = 'New " Household ' + last + ' " is created.'
@@ -184,7 +184,6 @@ def household_add_member():
             if db.session.query(Member.id).filter_by(id=s).limit(1).scalar() == s:
                 db.session.query(Member.id).filter_by(id=s).update({spouse:db.session.query(Member.id).order_by(Member.id.desc()).limit(1).scalar()})
                 
-            
             last = str(db.session.query(Member.id).order_by(Member.id.desc()).limit(1).scalar())
             addMemberMessage = 'Member ' + last + ' has been created. '
             return render_template('household_add_member.html', addMemberMessage=addMemberMessage);  
@@ -265,8 +264,7 @@ def student_encouragement_bonus():
 
     SEBMessage = qualified_members
     return render_template('student_encouragement_bonus.html', SEBMessage=SEBMessage);
-    
-    
+     
 @app.route("/listqualifying/MS", methods=["GET", "POST"])
 def multigeneration_scheme():
     db.create_all()
@@ -314,7 +312,35 @@ def multigeneration_scheme():
     MSMessage = qualified_members
     return render_template('multigeneration_scheme.html', MSMessage=MSMessage);
     
- 
+@app.route("/listqualifying/EB", methods=["GET", "POST"])
+def elder_bonus():
+    db.create_all()
+    qualified_households = []
+    household_row_id = []
+    members_income = 0
+
+    # Join Household and Member
+    household_income = db.session.query(Household).join(Member, Household.id == Member.household_id)
+    
+    # For each Household
+    for row in household_income:
+        # If member is in a hdb household, create a list of members
+        if row.housingType == 'hdb':
+            # Track each householf in a list
+            household_row_id.append(row.id)
+        
+    # Queries for Member's id and household_id
+    # Filters 
+    # If age > 55
+    # If Household is hdb
+    # That Member is eligible
+    # TO DO - Currently Checks Year only. Would like to check Full Date.
+    filtered_households = db.session.query(Member).filter(and_(extract('year',Member.dob) < extract('year',datetime.today())-55), Member.household_id.in_((household_row_id))).order_by(Member.household_id.asc()).all()
+
+    EBMessage = filtered_households
+    return render_template('elder_bonus.html', EBMessage=EBMessage);
+    
+    
     
 
 if __name__ == "__main__":
