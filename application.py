@@ -2,8 +2,8 @@
 from flask import Flask,redirect, url_for,render_template, url_for, flash, send_from_directory, request, session
 from datetime import timedelta
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import exc
-from datetime import datetime
+from sqlalchemy import exc, extract, func
+from datetime import datetime, date
 import secrets
 import string
 
@@ -87,7 +87,7 @@ def pagenotfound():
 def admin():
     return redirect(url_for("pagenotfound"))
     
-@app.route("/create")
+@app.route("/create", methods=["GET", "POST"])
 def household_create():
     # If Method is GET
     if request.method == "GET":
@@ -105,7 +105,7 @@ def household_create():
     else: 
         return redirect(url_for("pagenotfound"))
    
-@app.route("/addmember")
+@app.route("/addmember", methods=["GET", "POST"])
 def household_add_member():
     db.create_all()
     # If Method is POST
@@ -195,7 +195,7 @@ def household_add_member():
     else: 
         return render_template('household_add_member.html');
 
-@app.route("/listall")
+@app.route("/listall", methods=["GET", "POST"])
 def household_list_all():
     db.create_all()
     # If Method is POST
@@ -206,7 +206,7 @@ def household_list_all():
     else: 
         return render_template('household_list_all.html');
         
-@app.route("/search")
+@app.route("/search", methods=["GET", "POST"])
 def household_search():
     db.create_all()
     # If Method is POST
@@ -218,30 +218,77 @@ def household_search():
     else: 
         return render_template('household_search.html');
 
-@app.route("/listqualifying")
+@app.route("/listqualifying", methods=["GET", "POST"])
 def household_list_qualifying():
     db.create_all()
     # If Method is POST
     if request.method == "POST":
-        h = request.form["household_list_qualifying"]
-        listQualifyingMessage = db.session.query(Household).get(h)
-        return render_template('household_list_qualifying.html', listQualifyingMessage= listQualifyingMessage);
+        return render_template('household_list_qualifying.html');
     # If Method is anything else
     else: 
         return render_template('household_list_qualifying.html');
 
 
-@app.route("/listqualifying/SEB")
+@app.route("/listqualifying/SEB", methods=["GET", "POST"])
 def student_encouragement_bonus():
     db.create_all()
-    # If Method is POST
-    if request.method == "POST":
-        return render_template('student_encouragement_bonus.html');
-    # If Method is anything else
-    else: 
-        return render_template('student_encouragement_bonus.html');
 
-
+    # household_income = 0
+    # members_income = []
+    # total_income = []
+    
+    # for row in db.session.query(Household, Member).filter(Household.id == Member.household_id).all():
+        # for aI in row.annualIncome:
+            # members_income = members_income + aI
+        
+        # household_income.append(members_income)
+     
+    #WORKING
+    # household_income = 0
+    # members_income = []
+    # total_income = []
+    #members_income = db.session.query(Member.annualIncome, Member.household_id)
+    #members_income = db.session.query(Member).join(Household, Member.household_id == Household.id).order_by(Member.household_id.asc())
+    #for row in members_income:
+    #    household_income = household_income + row.annualIncome
+    
+    
+    household_row_id = []
+    household_income = []
+    members_row_id = []
+    members_income = 0
+    total_income = []
+    
+    # Join Household and Member
+    total_income = db.session.query(Household).join(Member, Household.id == Member.household_id).order_by(Member.household_id.asc())
+    
+    # For each Household
+    for row in total_income:
+        # For each Member
+        for subrow in row.members:
+            # Add their incomes together
+            members_income = members_income + subrow.annualIncome
+        
+        # If member is in a household with > 200000, create a list of members
+        if members_income > 200000.0:
+            for subrow in row.members:
+                members_row_id.append(subrow.id)
+            
+            #household_row_id.append(members_income)
+            #household_row_id.append(row.id)
+            #household_row_id.append(members_row_id)
+            #household_income.append(household_row_id)
+            
+        #members_row_id = []
+        #household_row_id = []
+        
+        # Reset the income for each Household
+        members_income = 0
+            
+    SEBMessage = db.session.query(Member.household_id, Member.id).filter(extract('year',Member.dob) <= extract('year',datetime.today())-16, Member.id.in_((members_row_id))).all()
+    
+    #SEBMessage = household_income
+    return render_template('student_encouragement_bonus.html', SEBMessage=SEBMessage);
 
 if __name__ == "__main__":
     app.run()
