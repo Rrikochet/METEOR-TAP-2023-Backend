@@ -89,11 +89,8 @@ def admin():
     
 @app.route("/create", methods=["GET", "POST"])
 def household_create():
-    # If Method is GET
-    if request.method == "GET":
-        return render_template('household_create.html');
     # If Method is POST
-    elif request.method == "POST":
+    if request.method == "POST":
         db.create_all()
         hT = request.form["housingType"]
         db.session.add(Household(housingType=hT))
@@ -103,7 +100,7 @@ def household_create():
         return render_template('household_create.html', createMessage=createMessage);
     # If Method is anything else
     else: 
-        return redirect(url_for("pagenotfound"))
+        return render_template('household_create.html');
    
 @app.route("/addmember", methods=["GET", "POST"])
 def household_add_member():
@@ -121,10 +118,6 @@ def household_add_member():
             h = request.form["household_id"]
             addMemberMessage = 'Something went wrong.'
             spouseCheck = False
-            
-            # UNUSED to see all existing households
-            # existingHousehold = [id for id, in db.session.query(Household.id)]
-            # Do logic to check for all inputs that cannot be empty
             
             # Spouse Check Function
             def spouse_check(mS, s, spouseCheck, addMemberMessage):
@@ -171,6 +164,9 @@ def household_add_member():
             if spouseCheck != True:
                 return render_template('household_add_member.html', addMemberMessage=addMemberMessage);
 
+            # If Member inputs no annualIncome, it will be 0
+            if aI == "":
+                aI = 0
             
             # If Member inputs a household value, use it, otherwise use latest household
             if h == "":
@@ -197,13 +193,9 @@ def household_add_member():
 @app.route("/listall", methods=["GET", "POST"])
 def household_list_all():
     db.create_all()
-    # # If Method is POST
-    # if request.method == "POST": 
     listAllMessage = db.session.query(Household).all()
     return render_template('household_list_all.html', listAllMessage= listAllMessage);
-    # # If Method is anything else
-    # else: 
-        # return render_template('household_list_all.html');
+
         
 @app.route("/search", methods=["GET", "POST"])
 def household_search():
@@ -231,36 +223,32 @@ def household_list_qualifying():
 @app.route("/listqualifying/SEB", methods=["GET", "POST"])
 def student_encouragement_bonus():
     db.create_all()
-    members_row_id = []
-    members_income = 0
+    filtered_members = []
+    household_income = 0
     
     # Join Household and Member
-    household_income = db.session.query(Household).join(Member, Household.id == Member.household_id)
-    
+    household_table = db.session.query(Household).join(Member, Household.id == Member.household_id)
     # For each Household
-    for row in household_income:
+    for row in household_table:
         # For each Member
         for subrow in row.members:
             # Add their incomes together
-            members_income = members_income + subrow.annualIncome
-        
+            household_income = household_income + subrow.annualIncome
         # If member is in a household with < 200000, create a list of members
-        if members_income < 200000.0:
+        if household_income < 200000.0:
             # Track each member in a list
             for subrow in row.members:
-                members_row_id.append(subrow.id)
-        
+                filtered_members.append(subrow.id)
         # Reset to 0 for next household
-        members_income = 0
-    
-    
-    # Queries for Member's id and household_id
-    # If age < 16
-    # If Household income < 200,000
-    # If Member is a student
-    # That Member is eligible
-    # TO DO - Currently Checks Year only. Would like to check Full Date.
-    qualified_members = db.session.query(Member.household_id, Member.id).filter(and_(extract('year',Member.dob) > extract('year',datetime.today())-16, Member.id.in_((members_row_id)), Member.occupationType == 'student')).order_by(Member.household_id.asc()).all()
+        household_income = 0
+        
+    # Filters for Member's id and household_id
+        # If age < 16
+        # If Household income < 200,000
+        # If Member is a student
+        # That Member is eligible
+        # TO DO - Currently Accurate to Month. Would like higher accuracy
+    qualified_members = db.session.query(Member.household_id, Member.id).filter(and_(age_calculator(Member) > current_calculator(16, 0), Member.id.in_(filtered_members), Member.occupationType == 'student')).order_by(Member.household_id.asc()).all()
 
     SEBMessage = qualified_members
     return render_template('student_encouragement_bonus.html', SEBMessage=SEBMessage);
@@ -268,80 +256,88 @@ def student_encouragement_bonus():
 @app.route("/listqualifying/MS", methods=["GET", "POST"])
 def multigeneration_scheme():
     db.create_all()
-    qualified_households = []
-    household_row_id = []
-    members_income = 0
+    qualified_members = []
+    filtered_households = []
+    household_income = 0
 
     # Join Household and Member
-    household_income = db.session.query(Household).join(Member, Household.id == Member.household_id)
-    
+    household_table = db.session.query(Household).join(Member, Household.id == Member.household_id)
     # For each Household
-    for row in household_income:
+    for row in household_table:
         # For each Member
         for subrow in row.members:
             # Add their incomes together
-            members_income = members_income + subrow.annualIncome
-        
+            household_income = household_income + subrow.annualIncome
         # If member is in a household with > 200000, create a list of members
-        if members_income < 150000.0:
+        if household_income < 150000.0:
             # Track each householf in a list
-            household_row_id.append(row.id)
-            
-            # for subrow in row.members:
-                # members_row_id.append(subrow.id)
-
+            filtered_households.append(row.id)
         # Reset to 0 for next household
-        members_income = 0
+        household_income = 0
         
-    # Queries for Member's id and household_id
-    # Filters 
-    # If age < 18 or age > 55
-    # If Household income < 150,000
-    # All Members in Household are eligible
-    # TO DO - Currently Checks Year only. Would like to check Full Date.
-    filtered_households = db.session.query(Member).filter(and_(or_(extract('year',Member.dob) > extract('year',datetime.today())-18, extract('year',Member.dob) < extract('year',datetime.today())-55)), Member.household_id.in_((household_row_id))).order_by(Member.household_id.asc()).all()
+    # Filters for Member's id and household_id
+        # If age < 18 or age > 55
+        # If Household income < 150,000
+        # All Members in Household are eligible
+        # TO DO - Currently Accurate to Month. Would like higher accuracy
+    filtered_members = db.session.query(Member).filter(and_(or_(age_calculator(Member) > current_calculator(18, 0), age_calculator(Member) < current_calculator(55, 0)), Member.household_id.in_(filtered_households))).order_by(Member.household_id.asc()).all()
     
     # Checks for duplicates in filtered households
-    for dupes in filtered_households:
-        if dupes not in qualified_households:
-            qualified_households.append(dupes.household_id)
+    for dupes in filtered_members:
+        if dupes not in qualified_members:
+            qualified_members.append(dupes.household_id)
 
     # All members from qualified households
-    qualified_members = db.session.query(Member.household_id, Member.id).filter(Member.household_id.in_((qualified_households))).order_by(Member.household_id.asc()).all()
+    qualified_households = db.session.query(Member.household_id, Member.id).filter(Member.household_id.in_(qualified_members)).order_by(Member.household_id.asc()).all()
 
-    MSMessage = qualified_members
+    MSMessage = qualified_households
     return render_template('multigeneration_scheme.html', MSMessage=MSMessage);
     
 @app.route("/listqualifying/EB", methods=["GET", "POST"])
 def elder_bonus():
     db.create_all()
-    qualified_households = []
-    household_row_id = []
-    members_income = 0
+    filtered_households = []
 
     # Join Household and Member
-    household_income = db.session.query(Household).join(Member, Household.id == Member.household_id)
-    
+    household_table = db.session.query(Household).join(Member, Household.id == Member.household_id)
     # For each Household
-    for row in household_income:
+    for row in household_table:
         # If member is in a hdb household, create a list of members
         if row.housingType == 'hdb':
             # Track each householf in a list
-            household_row_id.append(row.id)
+            filtered_households.append(row.id)
         
-    # Queries for Member's id and household_id
-    # Filters 
-    # If age > 55
-    # If Household is hdb
-    # That Member is eligible
-    # TO DO - Currently Checks Year only. Would like to check Full Date.
-    filtered_households = db.session.query(Member).filter(and_(extract('year',Member.dob) < extract('year',datetime.today())-55), Member.household_id.in_((household_row_id))).order_by(Member.household_id.asc()).all()
+    # Filters for Member's id and household_id
+        # If age > 55
+        # If Household is hdb
+        # That Member is eligible
+        # TO DO - Currently Accurate to Month. Would like higher accuracy
+    qualified_members = db.session.query(Member).filter(and_(age_calculator(Member) < current_calculator(55, 0)), Member.household_id.in_(filtered_households)).order_by(Member.household_id.asc()).all()
 
-    EBMessage = filtered_households
+    EBMessage = qualified_members
     return render_template('elder_bonus.html', EBMessage=EBMessage);
     
-    
-    
+@app.route("/listqualifying/BSG", methods=["GET", "POST"])
+def baby_sunshine_grant():
+    db.create_all()
+ 
+    # Filters for Member's id and household_id
+        # If age < 8 months
+        # That Member is eligible
+        # TO DO - Currently Accurate to Month. Would like higher accuracy
+    qualified_members = db.session.query(Member).filter(age_calculator(Member) > current_calculator(0, 8)).order_by(Member.household_id.asc()).all()
+
+    BSGMessage = qualified_members
+    return render_template('baby_sunshine_grant.html', BSGMessage=BSGMessage);
+
+def age_calculator(Member):
+    age_in_months = (extract('year',Member.dob)*12) + (extract('month',Member.dob)) 
+    return age_in_months;
+
+def current_calculator(Y, M):
+    current_in_months = ((extract('year',datetime.today())-Y)*12) + (extract('month',datetime.today())-M)
+    return current_in_months;
+
 
 if __name__ == "__main__":
     app.run()

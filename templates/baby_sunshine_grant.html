@@ -1,0 +1,29 @@
+<head>  
+    <title>List Qualifying Household</title>  
+</head>  
+<body>
+	<form>
+		<button formaction = "/create" >Create</button> 
+		<button formaction = "/search" >Search</button> 
+		<button formaction = "/addmember" >Add Member</button>
+		<button formaction = "/listall" >List All</button>
+		<button formaction = "/listqualifying" >List Qualifying</button>
+    </form>   
+
+	<h1>List Qualifying Household & Members for BSG</h1>
+	<h3>Displayed in the format: Household ID, Member ID</h3>
+	<ul>
+		{% for members in BSGMessage %}
+			
+		<li>
+			<label>Household ID</label>
+			{{ members.household_id }}
+			<label for="BSG">Member ID</label>
+			{{ members.id }}
+			<br>
+		</li>
+		{% endfor %}
+	</ul>
+
+</body>  
+</html>  
