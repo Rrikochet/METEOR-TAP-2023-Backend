@@ -2,7 +2,7 @@
 from flask import Flask,redirect, url_for,render_template, url_for, flash, send_from_directory, request, session
 from datetime import timedelta
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import exc, extract, func, or_
+from sqlalchemy import exc, extract, func, or_, and_
 from datetime import datetime, date
 import secrets
 import string
@@ -232,100 +232,89 @@ def household_list_qualifying():
 @app.route("/listqualifying/SEB", methods=["GET", "POST"])
 def student_encouragement_bonus():
     db.create_all()
-
-    # household_income = 0
-    # members_income = []
-    # total_income = []
-    
-    # for row in db.session.query(Household, Member).filter(Household.id == Member.household_id).all():
-        # for aI in row.annualIncome:
-            # members_income = members_income + aI
-        
-        # household_income.append(members_income)
-     
-    #WORKING
-    # household_income = 0
-    # members_income = []
-    # total_income = []
-    #members_income = db.session.query(Member.annualIncome, Member.household_id)
-    #members_income = db.session.query(Member).join(Household, Member.household_id == Household.id).order_by(Member.household_id.asc())
-    #for row in members_income:
-    #    household_income = household_income + row.annualIncome
-    
-    
-    household_row_id = []
-    household_income = []
     members_row_id = []
     members_income = 0
-    total_income = []
     
     # Join Household and Member
-    total_income = db.session.query(Household).join(Member, Household.id == Member.household_id)
+    household_income = db.session.query(Household).join(Member, Household.id == Member.household_id)
     
     # For each Household
-    for row in total_income:
+    for row in household_income:
         # For each Member
         for subrow in row.members:
             # Add their incomes together
             members_income = members_income + subrow.annualIncome
         
-        # If member is in a household with > 200000, create a list of members
+        # If member is in a household with < 200000, create a list of members
         if members_income < 200000.0:
+            # Track each member in a list
             for subrow in row.members:
                 members_row_id.append(subrow.id)
-            
-            #household_row_id.append(members_income)
-            #household_row_id.append(row.id)
-            #household_row_id.append(members_row_id)
-            #household_income.append(household_row_id)
-            
-        #members_row_id = []
-        #household_row_id = []
         
-        # Reset the income for each Household
+        # Reset to 0 for next household
         members_income = 0
     
-    # TO DO - Currently Checks Year only. Would like to check Full Date.
-    SEBMessage = db.session.query(Member.household_id, Member.id).filter(extract('year',Member.dob) > extract('year',datetime.today())-16, Member.id.in_((members_row_id))).order_by(Member.household_id.asc()).all()
     
-    #SEBMessage = household_income
+    # Queries for Member's id and household_id
+    # If age < 16
+    # If Household income < 200,000
+    # If Member is a student
+    # That Member is eligible
+    # TO DO - Currently Checks Year only. Would like to check Full Date.
+    qualified_members = db.session.query(Member.household_id, Member.id).filter(and_(extract('year',Member.dob) > extract('year',datetime.today())-16, Member.id.in_((members_row_id)), Member.occupationType == 'student')).order_by(Member.household_id.asc()).all()
+
+    SEBMessage = qualified_members
     return render_template('student_encouragement_bonus.html', SEBMessage=SEBMessage);
     
     
 @app.route("/listqualifying/MS", methods=["GET", "POST"])
 def multigeneration_scheme():
     db.create_all()
-
+    qualified_households = []
     household_row_id = []
-    household_income = []
-    members_row_id = []
     members_income = 0
-    total_income = []
-    
+
     # Join Household and Member
-    total_income = db.session.query(Household).join(Member, Household.id == Member.household_id)
+    household_income = db.session.query(Household).join(Member, Household.id == Member.household_id)
     
     # For each Household
-    for row in total_income:
+    for row in household_income:
         # For each Member
         for subrow in row.members:
             # Add their incomes together
             members_income = members_income + subrow.annualIncome
         
         # If member is in a household with > 200000, create a list of members
-        if members_income < 100000.0:
-            for subrow in row.members:
-                members_row_id.append(subrow.id)
-
-        # Reset the income for each Household
-        members_income = 0
+        if members_income < 150000.0:
+            # Track each householf in a list
+            household_row_id.append(row.id)
             
-    MSMessage = db.session.query(Member.household_id, Member.id).filter(or_(extract('year',Member.dob) > extract('year',datetime.today())-18, extract('year',Member.dob) < extract('year',datetime.today())-55), Member.id.in_((members_row_id))).order_by(Member.household_id.asc()).all()
+            # for subrow in row.members:
+                # members_row_id.append(subrow.id)
+
+        # Reset to 0 for next household
+        members_income = 0
+        
+    # Queries for Member's id and household_id
+    # Filters 
+    # If age < 18 or age > 55
+    # If Household income < 150,000
+    # All Members in Household are eligible
+    # TO DO - Currently Checks Year only. Would like to check Full Date.
+    filtered_households = db.session.query(Member).filter(and_(or_(extract('year',Member.dob) > extract('year',datetime.today())-18, extract('year',Member.dob) < extract('year',datetime.today())-55)), Member.household_id.in_((household_row_id))).order_by(Member.household_id.asc()).all()
     
-    #MSMessage = household_income
+    # Checks for duplicates in filtered households
+    for dupes in filtered_households:
+        if dupes not in qualified_households:
+            qualified_households.append(dupes.household_id)
+
+    # All members from qualified households
+    qualified_members = db.session.query(Member.household_id, Member.id).filter(Member.household_id.in_((qualified_households))).order_by(Member.household_id.asc()).all()
+
+    MSMessage = qualified_members
     return render_template('multigeneration_scheme.html', MSMessage=MSMessage);
     
-    
+ 
     
 
 if __name__ == "__main__":
