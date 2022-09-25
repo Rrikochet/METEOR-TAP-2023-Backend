@@ -50,37 +50,108 @@ The database will start/generate automatically on server startup.
 ## How to Test the Project
 
 A rudimentary Frontend has been made accessible to aid in the visualisation of the API.
+On the top of every page is a button to redirect you to their respective page.
 
 1. 	Create Household 
 
 	- Route: `/household_create`
 	- Type: `POST`
 	- Form parameters: 
-	 	- housingType (as a dropdown list) `	- landed, 
-	 						- condominium, 
-	 						- hdb`
-
+	 	- housingType (as a dropdown list) `landed, condominium, hdb`
 	- `127.0.0:5000/create` or [Heroku](gov-grant.herokuapp.com/create)
 
 	![image](https://user-images.githubusercontent.com/103415859/192133563-5bec007f-a3c0-4c34-9475-1345cc6f90b0.png)
 
-	
-	Assumptions made household_create:
-	
-	1. 
+	- Assumptions made:
+		- housingType can only be `landed, condominium, hdb`
+
+2.	Add Memember to Household
+
+	- Route: `/household_add_member`
+	- Type: `POST`
+	- Form parameters: 
+	 	- name (as a text box) - `name`
+	 	- gender (as a dropdown list) - `male, female`
+	 	- maritalStatus (as a dropdown list) - `married, single`
+	 	- spouse (as a text box) - `spouse`
+	 	- occupationType (as a dropdown list) - `unemployed, student, employed`
+	 	- annualIncome (as a text box) - `annualIncome`
+	 	- dob (as a Date calendar) - `dob`
+	 	- household_id (as a text box) - `household_id`
+	- `127.0.0:5000/addmember` or [Heroku](gov-grant.herokuapp.com/addmember)
+
+	![image](https://user-images.githubusercontent.com/103415859/192134289-d49e46c4-b6e0-41c0-bf31-7dfbdc12cca0.png)
+
+	- Assumptions made:
+		- name cannot be empty
+		- gender can only be `male, female`
+		- meritalStatus can only be `married, single`
+		- spouse can only be a positive number
+		- members do not enter a spouse if they are single
+		- when you are single, you cannot have a spouse
+		- when you are married, you must have a spouse
+		- you will have your spouse's id, automatically
+		- your spouse will have your id, automatically
+		- if you input a spouse, who is already taken, it wont be allowed
+		- if you input a spouse, who already has another spouse, it wont be allowed
+		- you and your spouse must be from the same household
+		- occupationType can only be `unemployed, student, employed`
+		- if annualIncome is left blank, it will be treated as 0
+		- dob can only be `%Y, %m, %d`
+		- dob must be entered
+		- household_id can only be a positive number
+		- household_id will be assumed to be the latest household created, if none is inputted
+
+3. 	List All Households
+
+	- Route: `/household_list_all`
+	- Type: `GET`
+	- Form parameters: 
+	- `127.0.0:5000/listall` or [Heroku](gov-grant.herokuapp.com/listall)
+
+	![image](https://user-images.githubusercontent.com/103415859/192136081-1ddfdb06-a1f0-4b26-bb28-06770d927b61.png)
+
+
+
+4. 	Search Households
+
+	- Route: `/household_search`
+	- Type: `POST`
+	- Form parameters: 
+	 	- Household `id`
+	- `127.0.0:5000/search` or [Heroku](gov-grant.herokuapp.com/search)
+
+	![image](https://user-images.githubusercontent.com/103415859/192136218-6fc99ff2-df7a-4440-acaf-936f3909f20a.png)
+
+
+5. 	List Qualifying Households & Members
+
+	- Route: `/household_list_qualifying`
+	- Type: `GET`
+	- Form parameters: 
+	- `127.0.0:5000/listqaulifying` or [Heroku](gov-grant.herokuapp.com/listqaulifying)
+
+	![image](https://user-images.githubusercontent.com/103415859/192136287-6c3849f0-4458-43a3-9a83-381883e74ca3.png)
+
+	- Assumptions made:
+		- There is another page for Student Encouragement Bonus, click the button.
+		- There is another page for Multigeneration Scheme, click the button.
+		- There is another page for Elder Bonus, click the button.
+		- There is another page for Baby Sunshine Grant, click the button.
+		- There is another page for YOLO GST Grant, click the button.
+
+5.1. 	List Qualifying Households & Members
+
+	- Route: `/list_qualifying_modules/student`
+	- Type: `GET`
+	- Form parameters: 
+	- `127.0.0:5000/listqaulifying` or [Heroku](gov-grant.herokuapp.com/listqaulifying)
+
 	
 
-Assumptions made for the assessment in general:
-1. 
-	Authentication is not required.
 
 
-Assumptions made for End-Points specified:
-1. a. 
-	It is assumed that "create" the household is done automatically, 
-	an id (primary key) is given to the newly created household to identify it.
-1. b.
-	The only Housing Types are mentioned. Landed, Condominium, HDB. 
+
 
 ## Thank You!
 
