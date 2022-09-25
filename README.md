@@ -233,6 +233,7 @@ Looking back, i see that alot of things could have made my journey smoother:
 Testing with Pytest. - Is something i would like learn about and add.
 Make Th Code More Efficient. - I could see possible ways to make improvements in the way queries were handled, perhaps giving better performance.
 Perform Validations within classes - I initially could not understand this and would go back to improve on that.
+The Code is Buggy.
 
 	
 ## Thank You!
