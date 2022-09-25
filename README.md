@@ -52,6 +52,7 @@ The database will start/generate automatically on server startup.
 A rudimentary Frontend has been made accessible to aid in the visualisation of the API.
 On the top of every page is a button to redirect you to their respective page.
 
+
 1. 	Create Household 
 
 	- Route: `/household_create`
@@ -64,6 +65,7 @@ On the top of every page is a button to redirect you to their respective page.
 
 	- Assumptions made:
 		- housingType can only be `landed, condominium, hdb`
+
 
 2.	Add Memember to Household
 
@@ -102,6 +104,7 @@ On the top of every page is a button to redirect you to their respective page.
 		- household_id can only be a positive number
 		- household_id will be assumed to be the latest household created, if none is inputted
 
+
 3. 	List All Households
 
 	- Route: `/household_list_all`
@@ -124,7 +127,8 @@ On the top of every page is a button to redirect you to their respective page.
 	![image](https://user-images.githubusercontent.com/103415859/192136218-6fc99ff2-df7a-4440-acaf-936f3909f20a.png)
 
 
-5. 	List Qualifying Households & Members
+
+5. 0	List Qualifying Households & Members
 
 	- Route: `/household_list_qualifying`
 	- Type: `GET`
@@ -140,19 +144,69 @@ On the top of every page is a button to redirect you to their respective page.
 		- There is another page for Baby Sunshine Grant, click the button.
 		- There is another page for YOLO GST Grant, click the button.
 
-5.1. 	List Qualifying Households & Members
 
-	- Route: `/list_qualifying_modules/student`
+
+5. 1	List Qualifying Households & Members for SEB
+	
+	- Route: `/list_qualifying_modules/student_encouragement_bonus`
 	- Type: `GET`
 	- Form parameters: 
-	- `127.0.0:5000/listqaulifying` or [Heroku](gov-grant.herokuapp.com/listqaulifying)
+	- `127.0.0:5000/listqaulifying/SEB` or [Heroku](gov-grant.herokuapp.com/listqaulifying/SEB)
+
+	![image](https://user-images.githubusercontent.com/103415859/192137111-7f87022e-3137-4fdb-b5bd-772dd296fe78.png)
+
+	- Assumptions Made:
+		- Following Criteria, the Qualifying Members with age < 16 years old, is a student. (Assuming Qualifying Members who fall under this bonus should be a student)
+
+
+
+5. 2	List Qualifying Households & Members for MS
+	
+	- Route: `/list_qualifying_modules/multigeneration_scheme`
+	- Type: `GET`
+	- Form parameters: 
+	- `127.0.0:5000/listqaulifying/MS` or [Heroku](gov-grant.herokuapp.com/listqaulifying/MS)
+
+	![image](https://user-images.githubusercontent.com/103415859/192137122-e5ea598c-5eb5-4cf9-9784-59b5965e8e10.png)
+
 
 	
+5. 3	List Qualifying Households & Members for EB
+	
+	- Route: `/list_qualifying_modules/elder_bonus`
+	- Type: `GET`
+	- Form parameters: 
+	- `127.0.0:5000/listqaulifying/EB` or [Heroku](gov-grant.herokuapp.com/listqaulifying/EB)
+
+	![image](https://user-images.githubusercontent.com/103415859/192137228-8a483201-6391-4332-8cbc-14c59d5972df.png)
+
+	- Assumptions Made:
+		- Following Criteria, the Qualifying Members with age > 55 years old, is eligible. (Assuming Qualifying Members age => 55 is a typo)
+	
+	
+	
+5. 4	List Qualifying Households & Members for BSG
+	
+	- Route: `/list_qualifying_modules/baby_sunshine_grant`
+	- Type: `GET`
+	- Form parameters: 
+	- `127.0.0:5000/listqaulifying/BSG` or [Heroku](gov-grant.herokuapp.com/listqaulifying/BSG)
+
+	![image](https://user-images.githubusercontent.com/103415859/192137245-0f95055f-6539-4b13-963f-a0fc28a1bbe4.png)
 
 
 
+5. 5	List Qualifying Households & Members for YGG
+	
+	- Route: `/list_qualifying_modules/yolo_gst_grant`
+	- Type: `GET`
+	- Form parameters: 
+	- `127.0.0:5000/listqaulifying/YGG` or [Heroku](gov-grant.herokuapp.com/listqaulifying/YGG)
 
+	![image](https://user-images.githubusercontent.com/103415859/192137276-9147915c-38b0-4f68-8e80-f58e500bd956.png)
 
+	
+	
 ## Thank You!
 
 Admittedly as this was my first take home assignment, I have 
