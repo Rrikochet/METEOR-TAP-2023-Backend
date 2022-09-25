@@ -23,14 +23,15 @@ This project is developed on Python 3.9.13 on Windows 10.
 
 2.	[Clone](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) the GitHub [Project](https://github.com/Rrikochet/METEOR-TAP-2023-Backend.git) Repository.
 
-3.	To setup the virtual environment. Type into cmd.
+3.	To setup the virtual environment. Type into cmd. Make sure you are cd to the project directory.
 
 	`python -m venv venv`
 	
 	
 4. 	Activate the virtual environment. Type into cmd.
 
-	`. venv/Scrips/activate`
+	`cd venv/Scrips`
+	`activate`
 	
 	
 5.	Install requirements into venv. Type into cmd.
