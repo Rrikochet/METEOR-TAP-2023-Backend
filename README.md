@@ -51,6 +51,8 @@ The database will start/generate automatically on server startup.
 
 A rudimentary Frontend has been made accessible to aid in the visualisation of the API.
 On the top of every page is a button to redirect you to their respective page.
+1 	to  	5 	Are the 5 API End-Points as set by the requirements. The endpoints use URL path and HTTP verbs.
+5. 1 	to 	5. 5	Are the 5 Grants as part of the Government Grant Disbursement API per no. 5.
 
 
 1. 	Create Household 
@@ -59,7 +61,7 @@ On the top of every page is a button to redirect you to their respective page.
 	- Type: `POST`
 	- Form parameters: 
 	 	- housingType (as a dropdown list) `landed, condominium, hdb`
-	- `127.0.0:5000/create` or [Heroku](gov-grant.herokuapp.com/create)
+	- `127.0.0:5000/create` or [Heroku](https://gov-grant.herokuapp.com/create)
 
 	![image](https://user-images.githubusercontent.com/103415859/192133563-5bec007f-a3c0-4c34-9475-1345cc6f90b0.png)
 
@@ -80,7 +82,7 @@ On the top of every page is a button to redirect you to their respective page.
 	 	- annualIncome (as a text box) - `annualIncome`
 	 	- dob (as a Date calendar) - `dob`
 	 	- household_id (as a text box) - `household_id`
-	- `127.0.0:5000/addmember` or [Heroku](gov-grant.herokuapp.com/addmember)
+	- `127.0.0:5000/addmember` or [Heroku](https://gov-grant.herokuapp.com/addmember)
 
 	![image](https://user-images.githubusercontent.com/103415859/192134289-d49e46c4-b6e0-41c0-bf31-7dfbdc12cca0.png)
 
@@ -110,7 +112,7 @@ On the top of every page is a button to redirect you to their respective page.
 	- Route: `/household_list_all`
 	- Type: `GET`
 	- Form parameters: 
-	- `127.0.0:5000/listall` or [Heroku](gov-grant.herokuapp.com/listall)
+	- `127.0.0:5000/listall` or [Heroku](https://gov-grant.herokuapp.com/listall)
 
 	![image](https://user-images.githubusercontent.com/103415859/192136081-1ddfdb06-a1f0-4b26-bb28-06770d927b61.png)
 
@@ -122,7 +124,7 @@ On the top of every page is a button to redirect you to their respective page.
 	- Type: `POST`
 	- Form parameters: 
 	 	- Household `id`
-	- `127.0.0:5000/search` or [Heroku](gov-grant.herokuapp.com/search)
+	- `127.0.0:5000/search` or [Heroku](https://gov-grant.herokuapp.com/search)
 
 	![image](https://user-images.githubusercontent.com/103415859/192136218-6fc99ff2-df7a-4440-acaf-936f3909f20a.png)
 
@@ -133,7 +135,7 @@ On the top of every page is a button to redirect you to their respective page.
 	- Route: `/household_list_qualifying`
 	- Type: `GET`
 	- Form parameters: 
-	- `127.0.0:5000/listqaulifying` or [Heroku](gov-grant.herokuapp.com/listqaulifying)
+	- `127.0.0:5000/listqaulifying` or [Heroku](https://gov-grant.herokuapp.com/listqaulifying)
 
 	![image](https://user-images.githubusercontent.com/103415859/192136287-6c3849f0-4458-43a3-9a83-381883e74ca3.png)
 
@@ -151,7 +153,7 @@ On the top of every page is a button to redirect you to their respective page.
 	- Route: `/list_qualifying_modules/student_encouragement_bonus`
 	- Type: `GET`
 	- Form parameters: 
-	- `127.0.0:5000/listqaulifying/SEB` or [Heroku](gov-grant.herokuapp.com/listqaulifying/SEB)
+	- `127.0.0:5000/listqaulifying/SEB` or [Heroku](https://gov-grant.herokuapp.com/listqaulifying/SEB)
 
 	![image](https://user-images.githubusercontent.com/103415859/192137111-7f87022e-3137-4fdb-b5bd-772dd296fe78.png)
 
@@ -165,7 +167,7 @@ On the top of every page is a button to redirect you to their respective page.
 	- Route: `/list_qualifying_modules/multigeneration_scheme`
 	- Type: `GET`
 	- Form parameters: 
-	- `127.0.0:5000/listqaulifying/MS` or [Heroku](gov-grant.herokuapp.com/listqaulifying/MS)
+	- `127.0.0:5000/listqaulifying/MS` or [Heroku](https://gov-grant.herokuapp.com/listqaulifying/MS)
 
 	![image](https://user-images.githubusercontent.com/103415859/192137122-e5ea598c-5eb5-4cf9-9784-59b5965e8e10.png)
 
@@ -176,7 +178,7 @@ On the top of every page is a button to redirect you to their respective page.
 	- Route: `/list_qualifying_modules/elder_bonus`
 	- Type: `GET`
 	- Form parameters: 
-	- `127.0.0:5000/listqaulifying/EB` or [Heroku](gov-grant.herokuapp.com/listqaulifying/EB)
+	- `127.0.0:5000/listqaulifying/EB` or [Heroku](https://gov-grant.herokuapp.com/listqaulifying/EB)
 
 	![image](https://user-images.githubusercontent.com/103415859/192137228-8a483201-6391-4332-8cbc-14c59d5972df.png)
 
@@ -190,7 +192,7 @@ On the top of every page is a button to redirect you to their respective page.
 	- Route: `/list_qualifying_modules/baby_sunshine_grant`
 	- Type: `GET`
 	- Form parameters: 
-	- `127.0.0:5000/listqaulifying/BSG` or [Heroku](gov-grant.herokuapp.com/listqaulifying/BSG)
+	- `127.0.0:5000/listqaulifying/BSG` or [Heroku](https://gov-grant.herokuapp.com/listqaulifying/BSG)
 
 	![image](https://user-images.githubusercontent.com/103415859/192137245-0f95055f-6539-4b13-963f-a0fc28a1bbe4.png)
 
@@ -201,11 +203,15 @@ On the top of every page is a button to redirect you to their respective page.
 	- Route: `/list_qualifying_modules/yolo_gst_grant`
 	- Type: `GET`
 	- Form parameters: 
-	- `127.0.0:5000/listqaulifying/YGG` or [Heroku](gov-grant.herokuapp.com/listqaulifying/YGG)
+	- `127.0.0:5000/listqaulifying/YGG` or [Heroku](https://gov-grant.herokuapp.com/listqaulifying/YGG)
 
 	![image](https://user-images.githubusercontent.com/103415859/192137276-9147915c-38b0-4f68-8e80-f58e500bd956.png)
 
-	
+
+## Initial Setup
+
+
+
 	
 ## Thank You!
 
