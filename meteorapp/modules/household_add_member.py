@@ -20,10 +20,23 @@ def household_add_member():
             addMemberMessage = 'Something went wrong.'
             spouseCheck = False
 
-            # Print Check if error occured
+            # Name cannot be empty
+            if n == "":
+                return render_template('household_add_member.html', addMemberMessage="Name cannot be Empty");
+            
+            # Gender must be male or female
+            if g != "male" and g != "female":
+                return render_template('household_add_member.html', addMemberMessage="You have to be male of female");
+            
+            # Marital Status and Spouse
+            # Check if error occured
             spouseCheck, addMemberMessage = spouse_check(mS, s, spouseCheck, addMemberMessage)
             if spouseCheck != True:
                 return render_template('household_add_member.html', addMemberMessage=addMemberMessage);
+
+            # Occupation Type must be employed, unemployed or student
+            if oT != "unemployed" and oT != "employed" and oT != "student":
+                return render_template('household_add_member.html', addMemberMessage="You have to be employed, unemployed, or student");
 
             # If Member inputs no annualIncome, it will be 0
             if aI == "":
@@ -55,8 +68,14 @@ def household_add_member():
  # Spouse Check Function
 def spouse_check(mS, s, spouseCheck, addMemberMessage):
     # Spouse Checks
+    
+    # Check if member marries him/herself
+    if mS == 'married' and s == Member.id:
+        addMemberMessage ='You cannot marry yourself'
+        return spouseCheck, addMemberMessage
+    
     # Check if member is single, but inputs a spouse, immediately return message
-    if mS == "single" and s != "":
+    elif mS == "single" and s != "":
         addMemberMessage ='You cannot be Single and have a Spouse'
         return spouseCheck, addMemberMessage
     
@@ -64,12 +83,17 @@ def spouse_check(mS, s, spouseCheck, addMemberMessage):
     elif mS == "married" and s == "":
         addMemberMessage='You cannot be Married and have no Spouse'
         return spouseCheck, addMemberMessage
-    
-    # Check if member is married and have spouse values
-    elif mS == "married" and s != "":
-    
+     
+    # Check if member is married and have spouse values and have same household id
+    elif mS == "married" and s != "" and db.session.query(Member.household_id).filter_by(id=s) != db.session.query(Member.household_id).filter_by(id=id):
         # Check if spouse has spouse value of new member id
-        if db.session.query(Member.spouse).filter_by(id=s).limit(1).scalar() is not db.session.query(Member.id).order_by(Member.id.desc()).limit(1).scalar()+1:
+        if db.session.query(Member.id).order_by(Member.id.desc()).limit(1).scalar() is None:
+            x = 1
+        else :
+            x = db.session.query(Member.id).order_by(Member.id.desc()).limit(1).scalar() + 1
+            
+            
+        if db.session.query(Member.spouse).filter_by(id=s).limit(1).scalar() is not x:
         
             # Check if spouse already exists on some other member
             if db.session.query(Member.id).filter_by(spouse=s).limit(1).scalar() is not None:
@@ -80,13 +104,18 @@ def spouse_check(mS, s, spouseCheck, addMemberMessage):
             elif db.session.query(Member.spouse).filter_by(id=s).limit(1).scalar() is not None:
                 addMemberMessage='Your Spouse has taken another person'
                 return spouseCheck, addMemberMessage
-                
             else: 
                 spouseCheck = True
                 return spouseCheck, addMemberMessage
         else: 
-            spouseCheck = True
+            addMemberMessage='Your Spouse is not your spouse'
             return spouseCheck, addMemberMessage
+        
+    elif mS == "married" and s != "" and db.session.query(Member.household_id).filter_by(id=s) == db.session.query(Member.household_id).filter_by(id=id):
+        spouseCheck = True
+        return spouseCheck, addMemberMessage
     else:
         spouseCheck = True
         return spouseCheck, addMemberMessage
+    
+       
