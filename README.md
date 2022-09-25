@@ -135,7 +135,7 @@ On the top of every page is a button to redirect you to their respective page.
 	- Route: `/household_list_qualifying`
 	- Type: `GET`
 	- Form parameters: 
-	- `127.0.0:5000/listqaulifying` or [Heroku](https://gov-grant.herokuapp.com/listqaulifying)
+	- `127.0.0:5000/listqualifying` or [Heroku](https://gov-grant.herokuapp.com/listqualifying)
 
 	![image](https://user-images.githubusercontent.com/103415859/192136287-6c3849f0-4458-43a3-9a83-381883e74ca3.png)
 
@@ -153,7 +153,7 @@ On the top of every page is a button to redirect you to their respective page.
 	- Route: `/list_qualifying_modules/student_encouragement_bonus`
 	- Type: `GET`
 	- Form parameters: 
-	- `127.0.0:5000/listqaulifying/SEB` or [Heroku](https://gov-grant.herokuapp.com/listqaulifying/SEB)
+	- `127.0.0:5000/listqualifying/SEB` or [Heroku](https://gov-grant.herokuapp.com/listqualifying/SEB)
 
 	![image](https://user-images.githubusercontent.com/103415859/192137111-7f87022e-3137-4fdb-b5bd-772dd296fe78.png)
 
@@ -167,7 +167,7 @@ On the top of every page is a button to redirect you to their respective page.
 	- Route: `/list_qualifying_modules/multigeneration_scheme`
 	- Type: `GET`
 	- Form parameters: 
-	- `127.0.0:5000/listqaulifying/MS` or [Heroku](https://gov-grant.herokuapp.com/listqaulifying/MS)
+	- `127.0.0:5000/listqualifying/MS` or [Heroku](https://gov-grant.herokuapp.com/listqualifying/MS)
 
 	![image](https://user-images.githubusercontent.com/103415859/192137122-e5ea598c-5eb5-4cf9-9784-59b5965e8e10.png)
 
@@ -178,7 +178,7 @@ On the top of every page is a button to redirect you to their respective page.
 	- Route: `/list_qualifying_modules/elder_bonus`
 	- Type: `GET`
 	- Form parameters: 
-	- `127.0.0:5000/listqaulifying/EB` or [Heroku](https://gov-grant.herokuapp.com/listqaulifying/EB)
+	- `127.0.0:5000/listqualifying/EB` or [Heroku](https://gov-grant.herokuapp.com/listqualifying/EB)
 
 	![image](https://user-images.githubusercontent.com/103415859/192137228-8a483201-6391-4332-8cbc-14c59d5972df.png)
 
@@ -192,7 +192,7 @@ On the top of every page is a button to redirect you to their respective page.
 	- Route: `/list_qualifying_modules/baby_sunshine_grant`
 	- Type: `GET`
 	- Form parameters: 
-	- `127.0.0:5000/listqaulifying/BSG` or [Heroku](https://gov-grant.herokuapp.com/listqaulifying/BSG)
+	- `127.0.0:5000/listqualifying/BSG` or [Heroku](https://gov-grant.herokuapp.com/listqualifying/BSG)
 
 	![image](https://user-images.githubusercontent.com/103415859/192137245-0f95055f-6539-4b13-963f-a0fc28a1bbe4.png)
 
@@ -203,16 +203,113 @@ On the top of every page is a button to redirect you to their respective page.
 	- Route: `/list_qualifying_modules/yolo_gst_grant`
 	- Type: `GET`
 	- Form parameters: 
-	- `127.0.0:5000/listqaulifying/YGG` or [Heroku](https://gov-grant.herokuapp.com/listqaulifying/YGG)
+	- `127.0.0:5000/listqualifying/YGG` or [Heroku](https://gov-grant.herokuapp.com/listqualifying/YGG)
 
 	![image](https://user-images.githubusercontent.com/103415859/192137276-9147915c-38b0-4f68-8e80-f58e500bd956.png)
 
 
 ## Initial Setup
 
+The project app is deployed on [Heroku](https://devcenter.heroku.com/articles/git#:~:text=To%20deploy%20your%20app%20to,heroku%20main%20Initializing%20repository%2C%20done.). Heroku provided a convenient and seamlessway to deploy our app on a website. The initial start up involved createing a procfile. 
 
+The database schema:
+![Gov Grant Schema drawio](https://user-images.githubusercontent.com/103415859/192138924-d2333f1f-067b-4239-878f-b130a2926bd3.png)
+
+
+
+Following these Requirements:
+
+Create a RESTful API that would help your team decide on groups of people who are eligible for various upcoming government grants.
+All endpoints should use URL path and HTTP verbs that are appropriate for the actions called.
+
+1. Create Household
+	a. This endpoint lets you create the household (housing unit)
+	b. Household fields:
+		i. Housing Type (Possible options: Landed, Condominium, HDB)
+2. Add a family member to household
+	a. This endpoint lets you add a family member to the household
+	b. Family member detail fields:
+		i. Name
+		ii. Gender
+		iii. MaritalStatus
+		iv. Spouse (either name of spouse or primary key)
+		v. OccupationType (Options: Unemployed, Student, Employed)
+		vi. AnnualIncome
+		vii. DOB
+3. List all households
+	a. This endpoint lists all the households in the database
+	b. Fields:
+		i. HouseholdType
+		ii. FamilyMembers
+			● Name
+			● Gender
+			● MaritalStatus
+			● Spouse (Name of the spouse or PK)
+			● OccupationType (Options: Unemployed, Student, Employed)
+			● AnnualIncome
+			● DOB
+4. Search for a specific household
+	a. This endpoint shows the details of a household in the database
+	b. Fields:
+		i. HouseholdType
+		ii. FamilyMembers
+			● Name
+			● Gender
+			● MaritalStatus
+			● OccupationType (Options: Unemployed, Student, Employed)
+			● AnnualIncome
+			● DOB
+5. List the households and qualifying family members of grant disbursement endpoint
+	a. You may include further assumptions about each result in a README.
+	b. Grant Schemes:
+		i. Student Encouragement Bonus
+			● Criteria
+				o Households with member(s) that is/are a student of less than 16 years old
+				o Households income of less than $200,000.
+			● Qualifying Members
+				o Members < 16 years old.
+		ii. Multigeneration Scheme
+			● Criteria
+				o Households with either member(s) <18 years or member(s) above the age of 55
+				o Households with income of less than $150,000.
+			● Qualifying Members
+				o All members of the household
+		iii. Elder Bonus
+			● Criteria
+				o HDB households with members above the age of 55.
+			● Qualifying Members
+				o Member(s) >= 55 years old
+		iv. Baby Sunshine Grant
+			● Criteria
+				o Households with member(s) younger than 8 months old
+			● Qualifying Members
+				o Member(s) < 8 months old
+		v. YOLO GST Grant
+			● Criteria
+				o HDB households with annual income of less than $100,000.
+			● Qualifying Members
+				o All members of the household
+
+
+
+
+## Things Learnt 
+Admittedly as this was my first take home assignment, I had no idea what to expect.
+This project showed me that there is vast amount more knowledge out there, and that i have only just scraped the surface:
+I learnt to deploy apps using Heroku, i thought it was quite magical.
+I learnt what APIs are, and how they interlace Frontend and Backend. 
+I learnt more ways to code in Python, as well as another form of databases.
+I learnt how to use Flask and SQLAlchemy, it showed me that packaging modules and models are not hard.
+I learnt that languages have limitations, realising that SQLite does not work well with Heroku was a lesson learnt.
+I learnt that producing products like this project, Government Grants Distribution, actually plays a significant part to Singaporeans.
+
+## Possible Improvements
+Looking back, i see that alot of things could have made my journey smoother:
+Testing with Pytest. - Is something i would like learn about and add.
+Make Th Code More Efficient. - I could see possible ways to make improvements in the way queries were handled, perhaps giving better performance.
+Perform Validations within classes - I initially could not understand this and would go back to improve on that.
 
 	
 ## Thank You!
+Im glad to have this opportunity to work on this project, as it was a significant learning experience to me. :)
 
-Admittedly as this was my first take home assignment, I have 
