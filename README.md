@@ -14,21 +14,40 @@ Which in turn enables the categorization and identification of household members
 
 ## Instructions to Run Project Locally
 
-Development of this project is based on Python 3.9.13.
+This project is developed on Python 3.9.13 on Windows 10.
 
 1.	Ensure that you have [Python 3](https://www.python.org/downloads/) installed on your machine. 
 
 2.	[Clone](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) the GitHub [Project](https://github.com/Rrikochet/METEOR-TAP-2023-Backend.git) Repository.
 
-3.	Setup the virtual environment.
-	``bash
-	git clone https://github.com/Rrikochet/METEOR-TAP-2023-Backend.git
-	``
+3.	To setup the virtual environment. Type into cmd.
+	`python -m venv venv`
 	
-4. 	Activate the virtual environment.
-	``bash
-	git clone https://github.com/Rrikochet/METEOR-TAP-2023-Backend.git
-	``
+4. 	Activate the virtual environment. Type into cmd.
+	`. venv/Scrips/activate`
+	
+5.	Install requirements into venv. Type into cmd.
+	`pip install -r requirements.txt`
+
+6.	Make sure you cd to the project's repository. Run the program.
+	`run.py`
+	
+The Flask Web Server may now be accessed locally. Type `127.0.0.1:5000` on any browser.
+The database will start/generate automatically on server startup.
+
+## How to Test the Project
+
+A rudimentary Frontend has been made accessible to aid in the visualisation of the API.
+
+1. Create Household 
+
+Route: `/household_create`
+Type: `POST`
+Form parameters:
+housingType (as a dropdown list) - `landed, condominium, hdb`
+`127.0.0:5000/create` or [Heroku](gov-grant.herokuapp.com/create)
+![image](https://user-images.githubusercontent.com/103415859/192133563-5bec007f-a3c0-4c34-9475-1345cc6f90b0.png)
+
 
 
 Assumptions made for the assessment in general:
