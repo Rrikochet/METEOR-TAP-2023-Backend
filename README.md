@@ -2,15 +2,18 @@
 
 TAP 2023 Div Tech Assessment - Meteor
 
+
 ## Project Website
 
 This project has been deployed on [Heroku](https://gov-grant.herokuapp.com/).
+
 
 ## Overview
 
 The requirements for this assessment is to create an RESTful API that the purpose of Government Grant Distribution. 
 The API will have the ability to enable the creation of the households and its members.
 Which in turn enables the categorization and identification of household members that are eligible for the Grants.
+
 
 ## Instructions to Run Project Locally
 
@@ -43,23 +46,29 @@ This project is developed on Python 3.9.13 on Windows 10.
 The Flask Web Server may now be accessed locally. Type `127.0.0.1:5000` on any browser.
 The database will start/generate automatically on server startup.
 
+
 ## How to Test the Project
 
 A rudimentary Frontend has been made accessible to aid in the visualisation of the API.
 
-1. Create Household 
+1. 	Create Household 
 
-Route: `/household_create`
+	- Route: `/household_create`
+	- Type: `POST`
+	- Form parameters: 
+	 	- housingType (as a dropdown list) `	- landed, 
+	 						- condominium, 
+	 						- hdb`
 
-Type: `POST`
+	- `127.0.0:5000/create` or [Heroku](gov-grant.herokuapp.com/create)
 
-Form parameters:
-housingType (as a dropdown list) - `landed, condominium, hdb`
-`127.0.0:5000/create` or [Heroku](gov-grant.herokuapp.com/create)
+	![image](https://user-images.githubusercontent.com/103415859/192133563-5bec007f-a3c0-4c34-9475-1345cc6f90b0.png)
 
-![image](https://user-images.githubusercontent.com/103415859/192133563-5bec007f-a3c0-4c34-9475-1345cc6f90b0.png)
-
-
+	
+	Assumptions made household_create:
+	
+	1. 
+	
 
 Assumptions made for the assessment in general:
 1. 
