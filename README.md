@@ -210,87 +210,12 @@ On the top of every page is a button to redirect you to their respective page.
 
 ## Initial Setup
 
-The project app is deployed on [Heroku](https://devcenter.heroku.com/articles/git#:~:text=To%20deploy%20your%20app%20to,heroku%20main%20Initializing%20repository%2C%20done.). Heroku provided a convenient and seamlessway to deploy our app on a website. The initial start up involved createing a procfile. 
+The project app is deployed on [Heroku](https://devcenter.heroku.com/articles/git#:~:text=To%20deploy%20your%20app%20to,heroku%20main%20Initializing%20repository%2C%20done.). 
+Heroku provided a convenient and seamlessway to deploy our app on a website. The initial start up involved createing a procfile. 
 
 The database schema:
+
 ![Gov Grant Schema drawio](https://user-images.githubusercontent.com/103415859/192138924-d2333f1f-067b-4239-878f-b130a2926bd3.png)
-
-
-
-Following these Requirements:
-
-Create a RESTful API that would help your team decide on groups of people who are eligible for various upcoming government grants.
-All endpoints should use URL path and HTTP verbs that are appropriate for the actions called.
-
-1. Create Household
-	a. This endpoint lets you create the household (housing unit)
-	b. Household fields:
-		i. Housing Type (Possible options: Landed, Condominium, HDB)
-2. Add a family member to household
-	a. This endpoint lets you add a family member to the household
-	b. Family member detail fields:
-		i. Name
-		ii. Gender
-		iii. MaritalStatus
-		iv. Spouse (either name of spouse or primary key)
-		v. OccupationType (Options: Unemployed, Student, Employed)
-		vi. AnnualIncome
-		vii. DOB
-3. List all households
-	a. This endpoint lists all the households in the database
-	b. Fields:
-		i. HouseholdType
-		ii. FamilyMembers
-			● Name
-			● Gender
-			● MaritalStatus
-			● Spouse (Name of the spouse or PK)
-			● OccupationType (Options: Unemployed, Student, Employed)
-			● AnnualIncome
-			● DOB
-4. Search for a specific household
-	a. This endpoint shows the details of a household in the database
-	b. Fields:
-		i. HouseholdType
-		ii. FamilyMembers
-			● Name
-			● Gender
-			● MaritalStatus
-			● OccupationType (Options: Unemployed, Student, Employed)
-			● AnnualIncome
-			● DOB
-5. List the households and qualifying family members of grant disbursement endpoint
-	a. You may include further assumptions about each result in a README.
-	b. Grant Schemes:
-		i. Student Encouragement Bonus
-			● Criteria
-				o Households with member(s) that is/are a student of less than 16 years old
-				o Households income of less than $200,000.
-			● Qualifying Members
-				o Members < 16 years old.
-		ii. Multigeneration Scheme
-			● Criteria
-				o Households with either member(s) <18 years or member(s) above the age of 55
-				o Households with income of less than $150,000.
-			● Qualifying Members
-				o All members of the household
-		iii. Elder Bonus
-			● Criteria
-				o HDB households with members above the age of 55.
-			● Qualifying Members
-				o Member(s) >= 55 years old
-		iv. Baby Sunshine Grant
-			● Criteria
-				o Households with member(s) younger than 8 months old
-			● Qualifying Members
-				o Member(s) < 8 months old
-		v. YOLO GST Grant
-			● Criteria
-				o HDB households with annual income of less than $100,000.
-			● Qualifying Members
-				o All members of the household
-
-
 
 
 ## Things Learnt 
@@ -311,5 +236,5 @@ Perform Validations within classes - I initially could not understand this and w
 
 	
 ## Thank You!
-Im glad to have this opportunity to work on this project, as it was a significant learning experience to me. :)
+Im glad to have this opportunity to work on this project, as it was a significant learning experience for me. :)
 
